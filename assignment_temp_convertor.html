@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            min-width: 250px;
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+        }
+        .toast.error {
+            background-color: #f44336; /* Red */
+        }
+        .toast.success {
+            background-color: #4CAF50; /* Green */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Temperature Converter</h1>
+        <label for="celsius">Celsius:</label>
+        <input type="number" id="celsius" placeholder="Enter Celsius">
+
+        <label for="fahrenheit">Fahrenheit:</label>
+        <input type="number" id="fahrenheit" placeholder="Enter Fahrenheit">
+
+        <button id="convert">Convert</button>
+
+        <div id="toast" class="toast"></div>
+
+        <h2>Converted Temperature</h2>
+        <input type="text" id="result" readonly>
+    </div>
+
+    <script>
+        const celsiusInput = document.getElementById('celsius');
+        const fahrenheitInput = document.getElementById('fahrenheit');
+        const resultInput = document.getElementById('result');
+        const toastDiv = document.getElementById('toast');
+        const convertButton = document.getElementById('convert');
+
+        const showToast = (message, type) => {
+            toastDiv.textContent = message;
+            toastDiv.className = `toast ${type}`;
+            toastDiv.style.display = 'block';
+            setTimeout(() => {
+                toastDiv.style.display = 'none';
+            }, 3000);
+        };
+
+        const convertTemperature = () => {
+            const celsiusValue = celsiusInput.value.trim();
+            const fahrenheitValue = fahrenheitInput.value.trim();
+
+            if (!celsiusValue && !fahrenheitValue) {
+                showToast('Both fields are empty. One field is required.', 'error');
+                return;
+            }
+
+            if (celsiusValue && fahrenheitValue) {
+                showToast('Enter only one field to calculate.', 'error');
+                return;
+            }
+
+            let result;
+            if (celsiusValue) {
+                result = (parseFloat(celsiusValue) * 9/5) + 32;
+                resultInput.value = `${result.toFixed(2)} °F`;
+            } else if (fahrenheitValue) {
+                result = (parseFloat(fahrenheitValue) - 32) * 5/9;
+                resultInput.value = `${result.toFixed(2)} °C`;
+            }
+
+            showToast('Conversion successful!', 'success');
+        };
+
+        convertButton.addEventListener('click', convertTemperature);
+    </script>
+</body>
+</html>
